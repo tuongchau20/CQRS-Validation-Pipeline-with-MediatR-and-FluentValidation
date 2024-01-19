@@ -23,6 +23,13 @@ namespace Pattern.Repositories
             await _context.SaveChangesAsync();
             return user;
         }
+        public async Task<InformationRequest> CreateInfoAsync(InformationRequest user)
+        {
+            _context.Information.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
+        }
+
 
         public async Task<User> GetUserByIdAsync(int userId)
         {

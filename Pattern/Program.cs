@@ -25,11 +25,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-builder.Services.AddValidatorsFromAssemblyContaining<UserValidator>();
+builder.Services.AddValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationPipeline<,>));
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-var app = builder.Build();
 
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IValidator<InformationRequest>, InformationRequestValidator>();
+
+var app = builder.Build();
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        // Log or handle the exception as needed
+    });
+});
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

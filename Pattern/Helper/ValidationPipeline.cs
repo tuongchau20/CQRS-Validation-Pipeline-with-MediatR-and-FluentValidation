@@ -15,11 +15,9 @@ namespace Pattern.Helper
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
             var context = new ValidationContext<TRequest>(request);
-
             var validationResults = await Task.WhenAll(_validators
                 .Select(v => v.ValidateAsync(context, cancellationToken)));
             var fail = validationResults.SelectMany(r => r.Errors).Where(f => f != null).ToList();
-
             if (fail.Count != 0)
             {
                 throw new ValidationException(fail);

@@ -23,7 +23,8 @@ namespace Pattern.Handlers
         {
             var user = new User
             {
-                Name = request.Name
+                Name = request.Name,
+                Age = request.Age
             };
 
             var validationResult = await _userValidator.ValidateAsync(user, cancellationToken);

@@ -33,7 +33,7 @@ namespace Pattern.Controllers
         {
             var query = new GetUserQuery { Id = id };
             var user = await _mediator.Send(query);
-
+            
             if (user == null)
             {
                 return NotFound();
@@ -41,8 +41,7 @@ namespace Pattern.Controllers
 
             return Ok(user);
         }
-
-        [HttpPost]
+        [HttpPost("create-user")]
         public async Task<IActionResult> CreateUser(CreateUserCommand command)
         {
             try
@@ -59,6 +58,25 @@ namespace Pattern.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost("create-info")]
+        public async Task<IActionResult> CreateInfo(CreateInfoCommand command)
+        {
+            try
+            {
+                var userId = await _mediator.Send(command);
+                return Ok(userId);
+            }
+            catch (ValidationException ex)
+            {
+                return BadRequest(ex.Errors);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(int id, User user)
         {
